@@ -1,11 +1,11 @@
 <template>
-  <div class="main">
-    <h2>main</h2>
+  <div class="not-found">
+    <h2>路径不正确，请联系管理员</h2>
   </div>
 </template>
 <script lang="ts" setup></script>
 <style lang="less" scoped>
-.main {
+.not-found {
   color: red;
 }
 </style>
