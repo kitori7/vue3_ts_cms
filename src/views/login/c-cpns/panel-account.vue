@@ -1,6 +1,6 @@
 <template>
   <div class="panel-phone">
-    <el-form :model="account" label-width="60px" size="large" :rules="accountRules">
+    <el-form :model="account" label-width="60px" size="large" :rules="accountRules" ref="formRef">
       <el-form-item label="账号" prop="name">
         <el-input v-model="account.name" />
       </el-form-item>
@@ -11,8 +11,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { reactive } from 'vue'
-import type { FormRules } from 'element-plus'
+import { reactive, ref } from 'vue'
+import type { FormRules, ElForm } from 'element-plus'
+import { ElMessage } from 'element-plus'
+import { accountLoginRequest } from '@/service/login/login'
 // 定义数据
 const account = reactive({
   name: '',
@@ -34,10 +36,22 @@ const accountRules: FormRules = {
   ],
   password: [{ required: true, message: '内容不能为空~', trigger: 'blur' }],
 }
-
+//表单ref
+const formRef = ref<InstanceType<typeof ElForm>>()
 //登录逻辑
 function loginAction() {
-  console.log(11)
+  formRef.value?.validate((validate) => {
+    if (validate) {
+      const name = account.name
+      const password = account.password
+
+      accountLoginRequest({ name, password }).then((res) => {
+        console.log(res)
+      })
+    } else {
+      ElMessage.error('请输入正确的内容~')
+    }
+  })
 }
 defineExpose({
   loginAction,
