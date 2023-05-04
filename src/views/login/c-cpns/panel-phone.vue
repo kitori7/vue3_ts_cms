@@ -6,5 +6,6 @@
 <script lang="ts" setup></script>
 <style lang="less" scoped>
 .pane-account {
+  color: red;
 }
 </style>

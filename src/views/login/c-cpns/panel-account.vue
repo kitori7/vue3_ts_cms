@@ -14,9 +14,10 @@
 import { reactive, ref } from 'vue'
 import type { FormRules, ElForm } from 'element-plus'
 import { ElMessage } from 'element-plus'
-import { accountLoginRequest } from '@/service/login/login'
+import useLoginStore from '@/stores/login/login'
+import type { IAccount } from '@/types'
 // 定义数据
-const account = reactive({
+const account: IAccount = reactive({
   name: '',
   password: '',
 })
@@ -39,15 +40,13 @@ const accountRules: FormRules = {
 //表单ref
 const formRef = ref<InstanceType<typeof ElForm>>()
 //登录逻辑
+const loginStore = useLoginStore()
 function loginAction() {
   formRef.value?.validate((validate) => {
     if (validate) {
       const name = account.name
       const password = account.password
-
-      accountLoginRequest({ name, password }).then((res) => {
-        console.log(res)
-      })
+      loginStore.loginAccountAction({ name, password })
     } else {
       ElMessage.error('请输入正确的内容~')
     }
