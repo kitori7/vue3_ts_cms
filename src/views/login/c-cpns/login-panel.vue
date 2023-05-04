@@ -10,7 +10,7 @@
               <span class="text">账号登录</span>
             </div>
           </template>
-          <PanelAccount></PanelAccount>
+          <PanelAccount ref="accountRef"></PanelAccount>
         </el-tab-pane>
         <el-tab-pane name="phone">
           <template #label>
@@ -40,9 +40,11 @@ import PanelPhone from './panel-phone.vue'
 const activeName = ref('account')
 const isRemPwd = ref(false)
 
+//子组件实例
+const accountRef = ref<InstanceType<typeof PanelAccount>>()
 function handleLoginBtnClick() {
   if (activeName.value === 'account') {
-    console.log(1)
+    accountRef.value?.loginAction()
   } else {
     console.log(2)
   }
