@@ -16,11 +16,16 @@ import type { FormRules, ElForm } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import useLoginStore from '@/stores/login/login'
 import type { IAccount } from '@/types'
+import { localCache } from '@/utils/cache'
+//定义catch常量
+const CACHE_NAME = 'name'
+const CACHE_PASSWORD = 'password'
 // 定义数据
 const account: IAccount = reactive({
-  name: '',
-  password: '',
+  name: localCache.getCatch(CACHE_NAME) ?? '',
+  password: localCache.getCatch(CACHE_PASSWORD) ?? '',
 })
+
 // 定义规则
 const accountRules: FormRules = {
   name: [
@@ -41,12 +46,23 @@ const accountRules: FormRules = {
 const formRef = ref<InstanceType<typeof ElForm>>()
 //登录逻辑
 const loginStore = useLoginStore()
-function loginAction() {
+function loginAction(isRemPwd: boolean) {
   formRef.value?.validate((validate) => {
     if (validate) {
       const name = account.name
       const password = account.password
-      loginStore.loginAccountAction({ name, password })
+
+      //登录逻辑
+      loginStore.loginAccountAction({ name, password }).then(() => {
+        //是否需要记住密码
+        if (isRemPwd) {
+          localCache.setCache(CACHE_NAME, name)
+          localCache.setCache(CACHE_PASSWORD, password)
+        } else {
+          localCache.removeCache(CACHE_NAME)
+          localCache.removeCache(CACHE_PASSWORD)
+        }
+      })
     } else {
       ElMessage.error('请输入正确的内容~')
     }

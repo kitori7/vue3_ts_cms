@@ -1,23 +1,39 @@
 import { defineStore } from 'pinia'
-import { accountLoginRequest } from '@/service/login/login'
+import { accountLoginRequest, getUserInfoById, getUserMenusByRoleId } from '@/service/login/login'
 import type { IAccount } from '@/types'
 import { localCache } from '@/utils/cache'
+import router from '@/router'
+import { LOGIN_TOKEN } from '@/global/constants'
 
-const LOGIN_TOKEN = 'login/token'
+interface ILoginState {
+  token: string
+  userInfo: any
+  userMenu: any[]
+}
 const useLoginStore = defineStore('login', {
-  state: () => ({
-    id: '',
+  state: (): ILoginState => ({
     token: localCache.getCatch(LOGIN_TOKEN) ?? '',
-    name: '',
+    userInfo: {},
+    userMenu: [],
   }),
   actions: {
+    //登录action
     async loginAccountAction(account: IAccount) {
       const loginResult = await accountLoginRequest(account)
-      this.id = loginResult.data.id
+      const id = loginResult.data.id
       this.token = loginResult.data.token
-      this.name = loginResult.data.name
-
+      //  本地储存
       localCache.setCache(LOGIN_TOKEN, this.token)
+      //获取登录用户详细信息
+      const userInfoRes = await getUserInfoById(id)
+      this.userInfo = userInfoRes.data
+
+      //根据角色请求权限
+      const userMenusRes = await getUserMenusByRoleId(this.userInfo.role.id)
+      this.userMenu = userMenusRes.data
+
+      //页面跳转
+      router.push('/main')
     },
   },
 })
