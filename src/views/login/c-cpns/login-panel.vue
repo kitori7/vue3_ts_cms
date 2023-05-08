@@ -37,11 +37,13 @@ import { ref, watch } from 'vue'
 import PanelAccount from './panel-account.vue'
 import PanelPhone from './panel-phone.vue'
 import { localCache } from '@/utils/cache'
+import { ElMessage } from 'element-plus'
 
 const activeName = ref('account')
 const isRemPwd = ref<boolean>(localCache.getCatch('isRemPwd') ?? false)
 watch(isRemPwd, (newValue) => {
-  localCache.setCache('isRemPwd', newValue)
+  // localCache.setCache('isRemPwd', newValue)
+  localStorage.setItem('isRemPwd', newValue.toString())
 })
 //子组件实例
 const accountRef = ref<InstanceType<typeof PanelAccount>>()
@@ -49,7 +51,7 @@ function handleLoginBtnClick() {
   if (activeName.value === 'account') {
     accountRef.value?.loginAction(isRemPwd.value)
   } else {
-    console.log(2)
+    ElMessage.warning('功能未完成')
   }
 }
 </script>
