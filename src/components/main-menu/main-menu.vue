@@ -40,7 +40,6 @@ defineProps({
 // 获取动态菜单
 const loginStore = useLoginStore()
 const userMenus = loginStore.userMenu
-console.log(userMenus)
 </script>
 <style lang="less" scoped>
 .nav-menu {

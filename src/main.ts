@@ -7,8 +7,8 @@ import App from './App.vue'
 import router from './router'
 import pinia from './stores'
 //注册全局icon
-import registerIcons from './global/register-icons'
+import icons from './global/register-icons'
 
 const app = createApp(App)
 
-app.use(router).use(pinia).use(registerIcons).mount('#app')
+app.use(router).use(pinia).use(icons).mount('#app')
