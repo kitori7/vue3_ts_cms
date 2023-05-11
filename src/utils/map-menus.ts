@@ -39,3 +39,25 @@ export function mapPathToMenu(path: string, userMenus: any[]) {
     }
   }
 }
+
+interface IBreadcrumbs {
+  name: string
+  path: string
+}
+/**
+ * 根据路径匹配需要显示的菜单和父级菜单
+ * @param path 需要匹配的路径
+ * @param userMenus 所有的菜单
+ */
+export function mapPathToBreadcrumbs(path: string, userMenus: any[]) {
+  const breadcrumbs: IBreadcrumbs[] = []
+  for (const menu of userMenus) {
+    for (const submenu of menu.children) {
+      if (submenu.url === path) {
+        breadcrumbs.push({ name: menu.name, path: menu.url })
+        breadcrumbs.push({ name: submenu.name, path: submenu.url })
+      }
+    }
+  }
+  return breadcrumbs
+}
