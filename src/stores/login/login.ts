@@ -13,9 +13,9 @@ interface ILoginState {
 }
 const useLoginStore = defineStore('login', {
   state: (): ILoginState => ({
-    token: localCache.getCatch(LOGIN_TOKEN) ?? '',
-    userInfo: localCache.getCatch('userInfo') ?? {},
-    userMenu: localCache.getCatch('userMenu') ?? [],
+    token: '',
+    userInfo: {},
+    userMenu: [],
   }),
   actions: {
     //登录action
@@ -40,10 +40,24 @@ const useLoginStore = defineStore('login', {
       localCache.setCache('userMenu', this.userMenu)
 
       //动态添加路由
-      const routes = mapMenusToRoutes(userMenu)
-      routes.forEach((route) => router.addRoute('main', route))
+
       //页面跳转
       router.push('/main')
+    },
+    loadLocalCacheAction() {
+      // 刷新默认加载数据
+      const token = localCache.getCatch(LOGIN_TOKEN)
+      const userInfo = localCache.getCatch('userInfo')
+      const userMenu = localCache.getCatch('userMenu')
+      if (token && userInfo && userMenu) {
+        this.token = token
+        this.userInfo = userInfo
+        this.userMenu = userMenu
+
+        // 动态添加路由
+        const routes = mapMenusToRoutes(userMenu)
+        routes.forEach((route) => router.addRoute('main', route))
+      }
     },
   },
 })

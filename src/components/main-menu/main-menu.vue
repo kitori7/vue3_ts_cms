@@ -6,6 +6,7 @@
     </div>
     <!-- 菜单 -->
     <el-menu
+      :default-active="defaultActive"
       text-color="#b7bdc3"
       active-text-color="#fff"
       background-color="#001529"
@@ -20,7 +21,9 @@
             <span>{{ item.name }}</span>
           </template>
           <template v-for="subitem in item.children" :key="subitem.id">
-            <el-menu-item :index="String(subitem.id)">{{ subitem.name }}</el-menu-item>
+            <el-menu-item :index="String(subitem.id)" @click="handleMenu(subitem.url)">{{
+              subitem.name
+            }}</el-menu-item>
           </template>
         </el-sub-menu>
       </template>
@@ -28,7 +31,10 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { ref } from 'vue'
 import useLoginStore from '@/stores/login/login'
+import { useRoute, useRouter } from 'vue-router'
+import { mapPathToMenu } from '@/utils/map-menus'
 
 //定义props接受属性
 defineProps({
@@ -40,6 +46,17 @@ defineProps({
 // 获取动态菜单
 const loginStore = useLoginStore()
 const userMenus = loginStore.userMenu
+
+// 路由点击
+const router = useRouter()
+function handleMenu(src: string) {
+  router.push(src)
+}
+
+// 默认菜单
+const route = useRoute()
+const pathMenu = mapPathToMenu(route.path, userMenus)
+const defaultActive = ref(pathMenu.id.toString())
 </script>
 <style lang="less" scoped>
 .nav-menu {

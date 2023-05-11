@@ -59,7 +59,7 @@ const router = useRouter()
 function handleExitClick() {
   localCache.removeCache(LOGIN_TOKEN)
   localCache.removeCache('userInfo')
-  localCache.removeCache('userMenus')
+  localCache.removeCache('userMenu')
   router.push('/login')
 }
 </script>
