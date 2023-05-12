@@ -31,7 +31,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed } from 'vue'
 import useLoginStore from '@/stores/login/login'
 import { useRoute, useRouter } from 'vue-router'
 import { mapPathToMenu } from '@/utils/map-menus'
@@ -55,8 +55,10 @@ function handleMenu(src: string) {
 
 // 默认菜单
 const route = useRoute()
-const pathMenu = mapPathToMenu(route.path, userMenus)
-const defaultActive = ref(pathMenu.id.toString())
+const defaultActive = computed(() => {
+  const pathMenu = mapPathToMenu(route.path, userMenus)
+  return pathMenu.id.toString()
+})
 </script>
 <style lang="less" scoped>
 .nav-menu {

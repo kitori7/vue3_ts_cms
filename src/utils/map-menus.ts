@@ -19,7 +19,14 @@ export function mapMenusToRoutes(userMenus: any[]) {
   for (const menu of userMenus) {
     for (const submenu of menu.children) {
       const route = localRoutes.find((item) => item.path === submenu.url)
-      if (route) routes.push(route)
+      if (route) {
+        // 将顶层路由添加重定向(只添加一次)
+        if (!routes.find((item) => item.path === menu.url)) {
+          routes.push({ path: menu.url, redirect: route.path })
+        }
+        // 将二级菜单路由添加
+        routes.push(route)
+      }
       if (!firstMenu && route) firstMenu = submenu
     }
   }
