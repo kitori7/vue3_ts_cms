@@ -1,0 +1,77 @@
+<template>
+  <div class="search">
+    <el-form :model="searchForm" ref="formRef" label-width="80px" size="large">
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <el-form-item label="用户名" prop="name">
+            <el-input v-model="searchForm.name" placeholder="请输入查询部门名称"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="部门领导" prop="leader">
+            <el-input v-model="searchForm.name" placeholder="请输入查询领导"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="查询时间" prop="createAt">
+            <el-date-picker
+              v-model="searchForm.createAt"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始时间"
+              end-placeholder="结束时间"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <div class="btns">
+      <el-button icon="Refresh" size="large" @click="handleResetClick">重置</el-button>
+      <el-button icon="Search" size="large" type="primary" @click="handleQueryClick"
+        >搜索</el-button
+      >
+    </div>
+  </div>
+</template>
+<script lang="ts" setup>
+import type { ElForm } from 'element-plus'
+import { reactive, ref } from 'vue'
+
+// 定义自定义事件
+const emit = defineEmits(['queryClick', 'resetClick'])
+const searchForm = reactive({
+  name: '',
+  leader: '',
+  createAt: '',
+})
+
+// 重置的操作
+const formRef = ref<InstanceType<typeof ElForm>>()
+function handleResetClick() {
+  formRef.value?.resetFields()
+  emit('resetClick')
+}
+
+//查询的操作
+function handleQueryClick() {
+  emit('queryClick', searchForm)
+}
+</script>
+<style lang="less" scoped>
+.search {
+  background-color: #fff;
+  padding: 20px;
+  .el-form-item {
+    padding: 20px;
+    margin-bottom: 0;
+  }
+}
+
+.btns {
+  text-align: right;
+  padding: 0 50px 10px 0;
+  .el-button {
+    height: 36px;
+  }
+}
+</style>

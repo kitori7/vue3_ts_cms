@@ -1,4 +1,9 @@
-import { deleteUserById, postUsersListData } from '@/service/main/system/system'
+import {
+  deleteUserById,
+  postUsersListData,
+  newUserData,
+  editUserData,
+} from '@/service/main/system/system'
 import { defineStore } from 'pinia'
 
 interface ISystemState {
@@ -20,6 +25,15 @@ const useSystemStore = defineStore('system', {
     async deleteUserByIdAction(id: number) {
       const deleteRes = await deleteUserById(id)
       console.log(deleteRes.data)
+      this.postUsersListAction({ size: 10, offset: 0 })
+    },
+    async newUserDataAction(userInfo: any) {
+      const newRes = await newUserData(userInfo)
+      this.postUsersListAction({ size: 10, offset: 0 })
+      console.log(newRes.data)
+    },
+    async editUserDataAction(id: number, userInfo: any) {
+      const editRes = await editUserData(id, userInfo)
       this.postUsersListAction({ size: 10, offset: 0 })
     },
   },

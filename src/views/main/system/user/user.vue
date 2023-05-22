@@ -1,7 +1,11 @@
 <template>
   <div class="user">
     <user-search @query-click="propQueryClick" @reset-click="propResetClick"></user-search>
-    <user-content ref="contentRef" @new-click="propNewClick"></user-content>
+    <user-content
+      ref="contentRef"
+      @new-click="propNewClick"
+      @edit-click="propEditClick"
+    ></user-content>
     <user-modal ref="modalRef"></user-modal>
   </div>
 </template>
@@ -21,10 +25,14 @@ function propQueryClick(formData: any) {
 function propResetClick() {
   contentRef.value?.fetchUserListData()
 }
-
+//对modal组件操作
 const modalRef = ref<InstanceType<typeof UserModal>>()
 function propNewClick() {
   modalRef.value?.setModalVisible()
+}
+
+function propEditClick(item: any) {
+  modalRef.value?.setModalVisible(false, item)
 }
 </script>
 

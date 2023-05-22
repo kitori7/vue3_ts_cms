@@ -40,7 +40,14 @@
         </el-table-column>
         <el-table-column align="center" label="操作" width="150px">
           <template #default="scope">
-            <el-button text size="small" type="primary" icon="Edit">编辑</el-button>
+            <el-button
+              text
+              size="small"
+              type="primary"
+              icon="Edit"
+              @click="handleEditBtnClick(scope.row)"
+              >编辑</el-button
+            >
             <el-button
               text
               size="small"
@@ -73,7 +80,7 @@ import useSystemStore from '@/stores/main/system/system'
 import { formatUTC } from '@/utils/format'
 
 //自定义事件
-const emit = defineEmits(['newClick'])
+const emit = defineEmits(['newClick', 'editClick'])
 //页码相关逻辑
 const currentPage = ref(1)
 const pageSize = ref(10)
@@ -103,13 +110,17 @@ function fetchUserListData(formData: any = {}) {
 //暴露网络请求
 defineExpose({ fetchUserListData })
 
-//编辑删除操作
+//删除操作
 function handleDeleteBtnClick(id: number) {
   systemStore.deleteUserByIdAction(id)
 }
 //新建用户功能
 function handleNewUserClick() {
   emit('newClick')
+}
+//编辑用户
+function handleEditBtnClick(item: any) {
+  emit('editClick', item)
 }
 </script>
 <style lang="less" scoped>
