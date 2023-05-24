@@ -15,7 +15,7 @@
         <div>{{ scope.row.leader }}</div>
       </template>
     </page-content>
-    <page-modal ref="modalRef"></page-modal>
+    <page-modal :modal-config="modalConfig" ref="modalRef"></page-modal>
   </div>
 </template>
 
@@ -23,10 +23,11 @@
 import { ref } from 'vue'
 import PageSearch from '@/components/page-search/page-search.vue'
 import PageContent from '@/components/page-content/page-content.vue'
-import PageModal from './c-cpns/page-modal.vue'
+import PageModal from '@/components/page-modal/page-modal.vue'
 
 import searchConfig from './config/search.config'
 import contentConfig from './config/content.config'
+import modalConfig from './config/modal.config'
 
 // 点击了搜索
 const contentRef = ref<InstanceType<typeof PageContent>>()
