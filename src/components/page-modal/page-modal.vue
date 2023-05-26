@@ -22,6 +22,16 @@
                   end-placeholder="结束时间"
                 ></el-date-picker>
               </template>
+              <template v-if="item.type === 'select'">
+                <el-select v-model="formData[item.prop]" :placeholder="item.placeholder">
+                  <el-option
+                    v-for="options in item.options"
+                    :key="options.value"
+                    :label="options.label"
+                    :value="options.value"
+                  ></el-option>
+                </el-select>
+              </template>
             </el-form-item>
           </template>
         </el-form>
@@ -36,13 +46,12 @@
   </div>
 </template>
 <script lang="ts" setup>
-import useMainStore from '@/stores/main/main'
 import useSystemStore from '@/stores/main/system/system'
-import { storeToRefs } from 'pinia'
 import { ref, reactive } from 'vue'
 
 interface IProps {
   modalConfig: {
+    pageName: string
     header: {
       newTitle: string
       editTitle: string
@@ -63,9 +72,7 @@ for (const item of props.modalConfig.formItems) {
 const formData = reactive<any>(initialData)
 
 //获取角色数据
-const mainStore = useMainStore()
 const systemStore = useSystemStore()
-const { entireDepartments } = storeToRefs(mainStore)
 
 const isNewRef = ref(true)
 const editData = ref()
@@ -90,9 +97,9 @@ function setModalVisible(isNew: boolean = true, item?: any) {
 function handleConfirm() {
   dialogVisible.value = false
   if (!isNewRef.value && editData.value) {
-    systemStore.editPageDataAction('department', editData.value.id, formData)
+    systemStore.editPageDataAction(props.modalConfig.pageName, editData.value.id, formData)
   } else {
-    systemStore.newPageDataAction('department', formData)
+    systemStore.newPageDataAction(props.modalConfig.pageName, formData)
   }
 }
 defineExpose({ setModalVisible })
