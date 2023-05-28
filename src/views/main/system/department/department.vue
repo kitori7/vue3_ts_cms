@@ -30,6 +30,8 @@ import PageModal from '@/components/page-modal/page-modal.vue'
 import searchConfig from './config/search.config'
 import contentConfig from './config/content.config'
 import modalConfig from './config/modal.config'
+import usePageContent from '@/hooks/usePageContent'
+import usePageModal from '@/hooks/usePageModal'
 
 //对modalConfig进行操作
 const modalConfigRef = computed(() => {
@@ -45,26 +47,10 @@ const modalConfigRef = computed(() => {
 
   return modalConfig
 })
-// 点击了搜索
-const contentRef = ref<InstanceType<typeof PageContent>>()
-function propQueryClick(queryInfo: any) {
-  contentRef.value?.fetchPageListData(queryInfo)
-}
 
-function propResetClick() {
-  contentRef.value?.fetchPageListData()
-}
+const { contentRef, propQueryClick, propResetClick } = usePageContent()
 
-const modalRef = ref<InstanceType<typeof PageModal>>()
-//编辑
-function propEditClick(item: any) {
-  modalRef.value?.setModalVisible(false, item)
-}
-
-//新增
-function propNewClick() {
-  modalRef.value?.setModalVisible()
-}
+const { modalRef, propEditClick, propNewClick } = usePageModal()
 </script>
 
 <style scoped></style>

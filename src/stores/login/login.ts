@@ -40,7 +40,7 @@ const useLoginStore = defineStore('login', {
       localCache.setCache('userInfo', this.userInfo)
       localCache.setCache('userMenu', this.userMenu)
 
-      // 请求所有roles、departments
+      // 请求所有roles、departments,menuList
       const mainStore = useMainStore()
       mainStore.fetchEntireDataAction()
 

@@ -32,6 +32,9 @@
                   ></el-option>
                 </el-select>
               </template>
+              <template v-if="item.type === 'custom'">
+                <slot :name="item.slotName"></slot>
+              </template>
             </el-form-item>
           </template>
         </el-form>
@@ -58,6 +61,7 @@ interface IProps {
     }
     formItems: any[]
   }
+  otherInfo?: any
 }
 
 const props = defineProps<IProps>()
@@ -96,10 +100,15 @@ function setModalVisible(isNew: boolean = true, item?: any) {
 //提交
 function handleConfirm() {
   dialogVisible.value = false
+  let infoData = formData
+  if (props.otherInfo) {
+    infoData = { ...infoData, ...props.otherInfo }
+  }
+
   if (!isNewRef.value && editData.value) {
-    systemStore.editPageDataAction(props.modalConfig.pageName, editData.value.id, formData)
+    systemStore.editPageDataAction(props.modalConfig.pageName, editData.value.id, infoData)
   } else {
-    systemStore.newPageDataAction(props.modalConfig.pageName, formData)
+    systemStore.newPageDataAction(props.modalConfig.pageName, infoData)
   }
 }
 defineExpose({ setModalVisible })
