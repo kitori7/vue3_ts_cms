@@ -4,19 +4,21 @@ import type { IAccount } from '@/types'
 import { localCache } from '@/utils/cache'
 import router from '@/router'
 import { LOGIN_TOKEN } from '@/global/constants'
-import { mapMenusToRoutes } from '@/utils/map-menus'
+import { mapMenuListToPermissions, mapMenusToRoutes } from '@/utils/map-menus'
 import useMainStore from '../main/main'
 
 interface ILoginState {
   token: string
   userInfo: any
   userMenu: any[]
+  permissions: string[]
 }
 const useLoginStore = defineStore('login', {
   state: (): ILoginState => ({
     token: '',
     userInfo: {},
     userMenu: [],
+    permissions: [],
   }),
   actions: {
     //登录action
@@ -44,6 +46,9 @@ const useLoginStore = defineStore('login', {
       const mainStore = useMainStore()
       mainStore.fetchEntireDataAction()
 
+      //获取权限
+      const permissions = mapMenuListToPermissions(userMenu)
+      this.permissions = permissions
       //页面跳转
       router.push('/main')
     },
@@ -60,7 +65,9 @@ const useLoginStore = defineStore('login', {
         // 请求所有roles、departments
         const mainStore = useMainStore()
         mainStore.fetchEntireDataAction()
-
+        //获取权限
+        const permissions = mapMenuListToPermissions(userMenu)
+        this.permissions = permissions
         // 动态添加路由
         const routes = mapMenusToRoutes(userMenu)
         routes.forEach((route) => router.addRoute('main', route))

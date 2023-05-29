@@ -2,7 +2,7 @@
   <div class="content">
     <div class="header">
       <h3 class="title">{{ contentConfig.header?.title ?? '数据列表' }}</h3>
-      <el-button type="primary" @click="handleNewUserClick">{{
+      <el-button type="primary" @click="handleNewUserClick" v-if="isCreate">{{
         contentConfig.header?.btnTitle ?? '新建数据'
       }}</el-button>
     </div>
@@ -20,6 +20,7 @@
             <el-table-column align="center" :label="item.label" width="150px">
               <template #default="scope">
                 <el-button
+                  v-if="isUpdate"
                   text
                   size="small"
                   type="primary"
@@ -28,6 +29,7 @@
                   >编辑</el-button
                 >
                 <el-button
+                  v-if="isDelete"
                   text
                   size="small"
                   type="danger"
@@ -69,6 +71,7 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import useSystemStore from '@/stores/main/system/system'
 import { formatUTC } from '@/utils/format'
+import usePermissions from '@/hooks/usePermissions'
 
 interface IProps {
   contentConfig: {
@@ -85,6 +88,13 @@ interface IProps {
 const props = defineProps<IProps>()
 //自定义事件
 const emit = defineEmits(['newClick', 'editClick'])
+
+//获取增删改查权限
+const isCreate = usePermissions(`${props.contentConfig.pageName}:create`)
+const isDelete = usePermissions(`${props.contentConfig.pageName}:delete`)
+const isUpdate = usePermissions(`${props.contentConfig.pageName}:update`)
+const isQuery = usePermissions(`${props.contentConfig.pageName}:query`)
+
 //页码相关逻辑
 const currentPage = ref(1)
 const pageSize = ref(10)
@@ -104,6 +114,7 @@ const { pageList, pageTotalCount } = storeToRefs(systemStore)
 
 //定义网络请求函数
 function fetchPageListData(formData: any = {}) {
+  if (!isQuery) return
   const size = pageSize.value
   const offset = (currentPage.value - 1) * size
   const pageInfo = { size, offset }
