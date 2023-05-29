@@ -9,6 +9,7 @@ import {
   editPageData,
 } from '@/service/main/system/system'
 import { defineStore } from 'pinia'
+import useMainStore from '../main'
 
 interface ISystemState {
   usersList: any[]
@@ -61,11 +62,15 @@ const useSystemStore = defineStore('system', {
     async newPageDataAction(pageName: string, pageInfo: any) {
       const newRes = await newPageData(pageName, pageInfo)
       this.postPageListAction(pageName, { size: 10, offset: 0 })
+      const mainStore = useMainStore()
+      mainStore.fetchEntireDataAction()
     },
 
     async editPageDataAction(pageName: string, id: number, pageInfo: any) {
       const editRes = await editPageData(pageName, id, pageInfo)
       this.postPageListAction(pageName, { size: 10, offset: 0 })
+      const mainStore = useMainStore()
+      mainStore.fetchEntireDataAction()
     },
   },
 })

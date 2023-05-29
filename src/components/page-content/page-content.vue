@@ -137,6 +137,19 @@ function handleNewUserClick() {
 function handleEditBtnClick(item: any) {
   emit('editClick', item)
 }
+
+//监听action
+systemStore.$onAction(({ name, after }) => {
+  after(() => {
+    if (
+      name === 'deletePageByIdAction' ||
+      name === 'editPageDataAction' ||
+      name === 'newPageDataAction'
+    ) {
+      currentPage.value = 1
+    }
+  })
+})
 </script>
 <style lang="less" scoped>
 .content {
