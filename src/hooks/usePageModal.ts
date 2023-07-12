@@ -1,9 +1,9 @@
 import { ref } from 'vue'
 import type PageModal from '@/components/page-modal/page-modal.vue'
 
-type EditFnType = (data: any) => void
+type callbackFnType = (data: any) => void
 
-function usePageModal(editCallback: EditFnType) {
+function usePageModal(newCallback?: callbackFnType, editCallback?: callbackFnType) {
   // 点击了搜索
   const modalRef = ref<InstanceType<typeof PageModal>>()
   //编辑

@@ -9,6 +9,7 @@ import {
   editPageData,
 } from '@/service/main/system/system'
 import { defineStore } from 'pinia'
+import useMainStore from '../main'
 
 interface ISystemState {
   usersList: any[]
@@ -38,7 +39,6 @@ const useSystemStore = defineStore('system', {
     async newUserDataAction(userInfo: any) {
       const newRes = await newUserData(userInfo)
       this.postUsersListAction({ size: 10, offset: 0 })
-      console.log(newRes.data)
     },
     async editUserDataAction(id: number, userInfo: any) {
       const editRes = await editUserData(id, userInfo)
@@ -56,16 +56,25 @@ const useSystemStore = defineStore('system', {
     async deletePageByIdAction(pageName: string, id: number) {
       const deleteRes = await deletePageById(pageName, id)
       this.postPageListAction(pageName, { offset: 0, size: 10 })
+      //新建角色的时候重拉取数据
+      const mainStore = useMainStore()
+      mainStore.fetchEntireDataAction()
     },
 
     async newPageDataAction(pageName: string, pageInfo: any) {
       const newRes = await newPageData(pageName, pageInfo)
       this.postPageListAction(pageName, { size: 10, offset: 0 })
+      //新建角色的时候重拉取数据
+      const mainStore = useMainStore()
+      mainStore.fetchEntireDataAction()
     },
 
     async editPageDataAction(pageName: string, id: number, pageInfo: any) {
       const editRes = await editPageData(pageName, id, pageInfo)
       this.postPageListAction(pageName, { size: 10, offset: 0 })
+      //新建角色的时候重拉取数据
+      const mainStore = useMainStore()
+      mainStore.fetchEntireDataAction()
     },
   },
 })
