@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts" name="department">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import useMainStore from '@/stores/main/main'
 
 import PageSearch from '@/components/page-search/page-search.vue'

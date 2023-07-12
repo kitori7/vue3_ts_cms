@@ -71,7 +71,9 @@ const dialogVisible = ref(false)
 const initialData: any = {}
 
 for (const item of props.modalConfig.formItems) {
-  initialData[item.prop] = item.initialValue ?? ''
+  if (item.prop) {
+    initialData[item.prop] = ''
+  }
 }
 const formData = reactive<any>(initialData)
 
@@ -83,6 +85,7 @@ const editData = ref()
 function setModalVisible(isNew: boolean = true, item?: any) {
   dialogVisible.value = true
   isNewRef.value = isNew
+
   if (!isNew && item) {
     for (const key in formData) {
       formData[key] = item[key]
@@ -90,8 +93,7 @@ function setModalVisible(isNew: boolean = true, item?: any) {
     editData.value = item
   } else {
     for (const key in formData) {
-      const item = props.modalConfig.formItems.find((item) => item.prop === key)
-      formData[key] = item ? item.initialData : ''
+      formData[key] = ''
     }
     editData.value = null
   }
@@ -104,7 +106,6 @@ function handleConfirm() {
   if (props.otherInfo) {
     infoData = { ...infoData, ...props.otherInfo }
   }
-
   if (!isNewRef.value && editData.value) {
     systemStore.editPageDataAction(props.modalConfig.pageName, editData.value.id, infoData)
   } else {
